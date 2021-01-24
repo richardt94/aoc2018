@@ -1,0 +1,39 @@
+#if r0 starts as 0
+add 2 to r5 (r5 = 2)
+square r5 (r5 = 4)
+multiply r5 by IP (19) (r5 = 76)
+multiply r5 by 11 (r5 = 836)
+add 4 to r3 (r3 = 4)
+multiply r3 by IP (22) (r3 = 88)
+add 21 to r3 (r3 = 109)
+add r3 to r5 (r5 = 945)
+add r0 to IP (IP = 25)
+#IP increments by one anyway to 26
+set IP to 0 (IP = 0)
+#IP increments by one without reading the jump at 0 again
+set r1 to 1 (r1 = 1)
+set r2 to 1 (r2 = 1)
+multiply r1 and r2, store into r3 (r3 = 1)
+store r3 == r5 in r3 (r3 = 0)
+increment IP by r3 (IP = 5) #i.e. skip the next instruction if r1*r2 == r5
+increment IP by 1 (IP = 7) #if we don't skip this skip (i.e. r1*r2 == r5), then r0 is incremented by r1.
+add 1 to r2 (r2 = 2)
+store (r2 > r5) in r3 (r3 = 0)
+increment IP by r3 (IP = 10) #i.e. if r2 > r5 exit the loop
+set IP to 2 (IP = 2) #loop
+
+#so the inner loop does:
+#set r2 to 1
+#while r2 <= 945
+#   if r2 * r1 == 945, increase r0 by r1
+#   r2 += 1
+#end
+
+#there is also an outer loop - once the program exits the inner loop because r2 > r5,
+#r1 is increased by one and the program jumps back to the line before the inner loop,
+#setting r2 to 1 again, unless r1 is >= r5 in which case the program halts
+#(by squaring the instruction pointer so it goes way past the end of the code).
+
+#this is basically a very crude factor-finding program - r0 stores the sum of all integers
+#that divide r5, and the value of r5 is set by the first few lines of code that execute before
+#the loops start. Now we just need to find what r5 is set to when r0 is 1 initially.
