@@ -57,12 +57,12 @@ visited = set()
 #nothing is zero, torch is 1, climbing gear is 2.
 #this means that if the type of a cell is equal
 #to the current tool, we can't go there without changing
-tovisit = [(0,0,0,1)]
+tovisit = [(tx + ty,0,0,0,1)]
 x = 0
 y = 0
 tool = 0
 while (x, y, tool) != (tx, ty, 1):
-    dist, x, y, tool = heapq.heappop(tovisit)
+    _, dist, x, y, tool = heapq.heappop(tovisit)
     if (x, y, tool) in visited:
         continue
     visited.add((x, y, tool))
@@ -72,10 +72,10 @@ while (x, y, tool) != (tx, ty, 1):
         if nx < 0 or ny < 0 or (nx, ny, tool) in visited:
             continue
         if getel(nx, ny) % 3 != tool:
-            heapq.heappush(tovisit, (dist + 1, nx, ny, tool))
+            heapq.heappush(tovisit, (dist + 1 + abs(nx-tx) + abs(ny-ty), dist + 1, nx, ny, tool))
     for ti in range(1,3):
         nt = (tool + ti) % 3
         if nt != getel(x,y) % 3:
-            heapq.heappush(tovisit, (dist + 7, x, y, nt))
+            heapq.heappush(tovisit, (dist + 7 + abs(nx-tx) + abs(ny-ty), dist + 7, x, y, nt))
 
 print(dist)
